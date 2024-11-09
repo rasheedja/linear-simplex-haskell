@@ -7,11 +7,11 @@
 -- Stability:   experimental
 module Linear.System.Simple.Util where
 
+import Comparison.Types
+  ( MixedComparison ((:<=), (:==), (:>=))
+  )
 import qualified Data.Map as M
 import qualified Data.Set as Set
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint ((:<=), (:==), (:>=))
-  )
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Expr.Types (Expr (..), ExprVarsOnly (..))
 import Linear.System.Simple.Types
@@ -57,7 +57,7 @@ removeUselessSystemBounds constraints bounds =
           (SimpleConstraint (ExprVarsOnly [VarTermVO var] :<= num)) -> case M.lookup var bounds of
             Just (Bounds _ (Just upper)) -> num <= upper
             _ -> True
-          (SimpleConstraint  (ExprVarsOnly [VarTermVO var] :>= num)) -> case M.lookup var bounds of
+          (SimpleConstraint (ExprVarsOnly [VarTermVO var] :>= num)) -> case M.lookup var bounds of
             Just (Bounds (Just lower) _) -> num >= lower
             _ -> True
           _ -> True

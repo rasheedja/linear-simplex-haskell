@@ -7,13 +7,14 @@
 -- Stability:   experimental
 module Linear.Constraint.Simple.Types where
 
-import Linear.Constraint.Generic.Types (GenericConstraint)
+import Comparison.Types (MixedComparison)
+import GHC.Generics (Generic)
 import Linear.Expr.Types (ExprVarsOnly)
 import Linear.Var.Types (SimplexNum)
-import GHC.Generics (Generic)
 import Test.QuickCheck (Arbitrary (..))
 
-newtype SimpleConstraint = SimpleConstraint { unSimpleConstraint :: GenericConstraint ExprVarsOnly SimplexNum }
+newtype SimpleConstraint = SimpleConstraint
+  {unSimpleConstraint :: MixedComparison ExprVarsOnly SimplexNum}
   deriving (Show, Eq, Read, Generic)
 
 instance Arbitrary SimpleConstraint where

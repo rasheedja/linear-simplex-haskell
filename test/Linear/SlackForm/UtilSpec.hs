@@ -1,5 +1,9 @@
 module Linear.SlackForm.UtilSpec where
 
+import Comparison.Types
+  ( MixedComparison ((:<=), (:==), (:>=))
+  , getMixedComparisonLHS
+  )
 import Control.Monad (forM)
 import Data.Functor ((<&>))
 import qualified Data.List as List
@@ -7,11 +11,8 @@ import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
 import qualified Data.Set as Set
 import qualified Debug.Trace as T
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint ((:<=), (:==), (:>=))
-  , getGenericConstraintLHS
-  )
 import Linear.Constraint.Linear.Types (LinearEquation (..))
+import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Expr.Types (Expr (..), ExprVarsOnly (..))
 import Linear.SlackForm.Util
   ( addSlackVariables
@@ -27,12 +28,11 @@ import Linear.Term.Types
   )
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.QuickCheck (Testable (property), withMaxSuccess)
-import Linear.Constraint.Simple.Types (SimpleConstraint(..))
 
 -- data Term = ConstTerm SimplexNum | CoeffTerm SimplexNum Var | VarTerm Var -- Consider VarTerm Var - note, we must consider normalizing this: Considered. It makes going to standard form easier due to type safety
 --   deriving (Show, Read, Eq, Ord, Generic)
 
--- TODO: consider type NumberConstraint = GenericConstraint SimplexNum SimplexNum
+-- TODO: consider type NumberConstraint = MixedComparison SimplexNum SimplexNum
 spec :: Spec
 spec = describe "Slack Form Transformations" $ do
   it
@@ -137,7 +137,7 @@ spec = describe "Slack Form Transformations" $ do
           any
             ( \(SimpleConstraint constraint) ->
                 let getVars _a = []
-                    lhs = getGenericConstraintLHS constraint
+                    lhs = getMixedComparisonLHS constraint
                     allVars = getVars lhs
                 in  var `notElem` allVars
             )

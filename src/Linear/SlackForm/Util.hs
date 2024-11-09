@@ -7,12 +7,12 @@
 -- Stability: experimental
 module Linear.SlackForm.Util where
 
+import Comparison.Types
+  ( MixedComparison ((:<=), (:==), (:>=))
+  )
 import qualified Data.Bifunctor as Bifunctor
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint ((:<=), (:==), (:>=))
-  )
 import Linear.Constraint.Linear.Types (LinearEquation (..))
 import qualified Linear.Constraint.Linear.Util as CLU
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))

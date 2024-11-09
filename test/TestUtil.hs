@@ -7,11 +7,11 @@
 -- Stability: experimental
 module TestUtil where
 
+import Comparison.Types
+  ( MixedComparison ((:<=), (:==), (:>=))
+  )
 import Control.Monad (forM)
 import qualified Data.Map as Map
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint ((:<=), (:==), (:>=))
-  )
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Constraint.Types
   ( Constraint (..)

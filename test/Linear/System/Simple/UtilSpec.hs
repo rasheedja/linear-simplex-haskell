@@ -7,12 +7,13 @@
 -- Stability: experimental
 module Linear.System.Simple.UtilSpec where
 
+import Comparison.Types
+  ( MixedComparison ((:<=), (:>=))
+  )
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint ((:<=), (:>=))
-  )
+import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Expr.Types (ExprVarsOnly (..))
 import Linear.System.Simple.Types
   ( SimpleSystem (SimpleSystem)
@@ -31,7 +32,6 @@ import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (counterexample)
 import TestUtil (evalSimpleSystem, genVarMap)
-import Linear.Constraint.Simple.Types (SimpleConstraint(..))
 
 spec :: Spec
 spec = do
@@ -87,8 +87,9 @@ spec = do
       findHighestVar simpleSystem100 `shouldBe` Just 100
       findHighestVar simpleSystem10 `shouldBe` Just 10
       findHighestVar simpleSystemMinus10 `shouldBe` Just (-10)
-  describe "Bounds" $ it
-    "validateBounds finds that deriving bounds for a system where -1 <= x <= 1 has valid bounds"
+  describe "Bounds"
+    $ it
+      "validateBounds finds that deriving bounds for a system where -1 <= x <= 1 has valid bounds"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -241,7 +242,9 @@ spec = do
           simplifiedSimpleSystem = removeUselessSystemBounds simpleSystem bounds
           expectedSimpleSystem =
             SimpleSystem
-              [SimpleConstraint $ ExprVarsOnly [VarTermVO 0] :>= 0, SimpleConstraint $ ExprVarsOnly [VarTermVO 0] :<= 2]
+              [ SimpleConstraint $ ExprVarsOnly [VarTermVO 0] :>= 0
+              , SimpleConstraint $ ExprVarsOnly [VarTermVO 0] :<= 2
+              ]
       simplifiedSimpleSystem `shouldBe` expectedSimpleSystem
   it
     "removeUselessSystemBounds removes upper bound of 0 <= x <= 2 when bounds say 0 <= x <= 1"

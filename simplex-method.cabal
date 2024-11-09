@@ -27,7 +27,7 @@ source-repository head
 
 library
   exposed-modules:
-      Linear.Constraint.Generic.Types
+      Comparison.Types
       Linear.Constraint.Linear.Types
       Linear.Constraint.Linear.Util
       Linear.Constraint.Simple.Types

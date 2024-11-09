@@ -7,15 +7,15 @@
 -- Stability:   experimental
 module Linear.Constraint.Types where
 
+import Comparison.Types (MixedComparison)
 import qualified Data.Set as Set
 import GHC.Generics (Generic)
-import Linear.Constraint.Generic.Types (GenericConstraint)
 import Linear.Expr.Types (Expr)
 import Test.QuickCheck (Arbitrary (..))
 
 -- Input
 -- TODO: Consider LinearConstraint
-newtype Constraint = Constraint {unConstraint :: GenericConstraint Expr Expr}
+newtype Constraint = Constraint {unConstraint :: MixedComparison Expr Expr}
   deriving (Show, Eq, Read, Generic)
 
 instance Arbitrary Constraint where

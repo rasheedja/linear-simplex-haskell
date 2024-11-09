@@ -7,11 +7,11 @@
 -- Stability: experimental
 module Linear.Constraint.Simple.Util where
 
+import Comparison.Types
+  ( MixedComparison (..)
+  )
 import qualified Data.List as L
 import qualified Data.Set as Set
-import Linear.Constraint.Generic.Types
-  ( GenericConstraint (..)
-  )
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Constraint.Types (Constraint (..))
 import Linear.Expr.Types (Expr (..), ExprVarsOnly (..))
