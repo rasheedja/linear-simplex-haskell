@@ -58,7 +58,7 @@ library
   hs-source-dirs:
       src
   default-extensions:
-      DataKinds DeriveFunctor DeriveGeneric DerivingStrategies DisambiguateRecordFields DuplicateRecordFields FlexibleContexts LambdaCase OverloadedLabels OverloadedRecordDot OverloadedStrings RecordWildCards TemplateHaskell TupleSections TypeApplications NamedFieldPuns
+      DataKinds DeriveFunctor DeriveGeneric DerivingStrategies DisambiguateRecordFields DuplicateRecordFields FlexibleContexts LambdaCase OverloadedLabels OverloadedRecordDot OverloadedStrings RecordWildCards TemplateHaskell TupleSections TypeApplications TypeFamilies NamedFieldPuns
   build-depends:
       QuickCheck
     , base >=4.14 && <5
@@ -86,7 +86,7 @@ test-suite simplex-method-test
   hs-source-dirs:
       test
   default-extensions:
-      DataKinds DeriveFunctor DeriveGeneric DerivingStrategies DisambiguateRecordFields DuplicateRecordFields FlexibleContexts LambdaCase OverloadedLabels OverloadedRecordDot OverloadedStrings RecordWildCards TemplateHaskell TupleSections TypeApplications NamedFieldPuns
+      DataKinds DeriveFunctor DeriveGeneric DerivingStrategies DisambiguateRecordFields DuplicateRecordFields FlexibleContexts LambdaCase OverloadedLabels OverloadedRecordDot OverloadedStrings RecordWildCards TemplateHaskell TupleSections TypeApplications TypeFamilies NamedFieldPuns
   build-depends:
       QuickCheck
     , base >=4.14 && <5

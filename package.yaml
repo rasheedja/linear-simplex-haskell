@@ -46,6 +46,7 @@ default-extensions:
   TemplateHaskell
   TupleSections
   TypeApplications
+  TypeFamilies
   NamedFieldPuns
 
 library:

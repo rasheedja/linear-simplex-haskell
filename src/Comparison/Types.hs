@@ -32,3 +32,30 @@ getMixedComparisonRHS :: MixedComparison a b -> b
 getMixedComparisonRHS (_ :<= b) = b
 getMixedComparisonRHS (_ :>= b) = b
 getMixedComparisonRHS (_ :== b) = b
+
+class MixedComparison2 c where
+  type LhsType c :: *
+  type RhsType c :: *
+
+  lhs :: c -> LhsType c
+  rhs :: c -> RhsType c
+
+  (.<=) :: c -> Bool
+  (.>=) :: c -> Bool
+
+  (.==) :: c -> Bool
+  (.==) c = (.>=) c && (.<=) c
+
+data IntComparison = IntComparison Int Int
+
+instance MixedComparison2 IntComparison where
+  type LhsType IntComparison = Int
+  type RhsType IntComparison = Int
+
+  lhs (IntComparison l _) = l
+  rhs (IntComparison _ r) = r
+
+  (.<=) (IntComparison l r) = l <= r
+  (.>=) (IntComparison l r) = l >= r
+
+  (.==) (IntComparison l r) = l == r
