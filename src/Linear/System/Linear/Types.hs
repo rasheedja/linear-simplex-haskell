@@ -12,14 +12,20 @@ import Linear.Constraint.Linear.Types (LinearEquation)
 import Linear.Expr.Types (Expr)
 
 -- TODO: name this system of equations or something
+-- TODO: OR, should I just get rid of this?
 newtype LinearSystem = LinearSystem {unLinearSystem :: [LinearEquation]}
   deriving (Show, Eq, Read, Generic)
 
-class CanBeLinearSystem a where
-  toLinearSystem :: a -> LinearSystem
+{- When would I ever want this? Do I need things to be able to be
+able to turn into linear systems? Yes. But do I want other people
+to be able to do that? It would be nice, but I think we do that in
+the future if people actually want it.
+-}
+-- class CanBeLinearSystem a where
+--   toLinearSystem :: a -> LinearSystem
 
-instance CanBeLinearSystem LinearSystem where
-  toLinearSystem = id
+-- instance CanBeLinearSystem LinearSystem where
+--   toLinearSystem = id
 
-instance CanBeLinearSystem LinearEquation where
-  toLinearSystem id = LinearSystem [id]
+-- instance CanBeLinearSystem LinearEquation where
+--   toLinearSystem id = LinearSystem [id]

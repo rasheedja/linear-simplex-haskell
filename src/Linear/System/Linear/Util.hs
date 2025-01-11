@@ -7,10 +7,11 @@
 -- Stability: experimental
 module Linear.System.Linear.Util where
 
+import qualified Data.Set as Set
 import Linear.Constraint.Linear.Types (LinearEquation (..))
 import qualified Linear.Constraint.Linear.Util as CLU
 import Linear.System.Linear.Types (LinearSystem (..))
-import Linear.Var.Types (Var)
+import Linear.Var.Types (Var, VarBounds)
 
 -- | Prepend a linear equation to a linear system
 prependLinearEquation :: LinearEquation -> LinearSystem -> LinearSystem
@@ -23,3 +24,6 @@ appendLinearEquation eq (LinearSystem eqs) = LinearSystem (eqs ++ [eq])
 findHighestVar :: LinearSystem -> Maybe Var
 findHighestVar (LinearSystem []) = Nothing
 findHighestVar (LinearSystem eqs) = Just $ maximum $ map CLU.findHighestVar eqs
+
+linearSystemVars :: LinearSystem -> Set.Set Var
+linearSystemVars = Set.unions . map CLU.linearEquationVars . unLinearSystem

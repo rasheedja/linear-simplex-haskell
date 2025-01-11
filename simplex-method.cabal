@@ -28,6 +28,8 @@ source-repository head
 library
   exposed-modules:
       Comparison.Types
+      Linear.CanonicalForm.Types
+      Linear.CanonicalForm.Util
       Linear.Constraint.Linear.Types
       Linear.Constraint.Linear.Util
       Linear.Constraint.Simple.Types
@@ -42,8 +44,6 @@ library
       Linear.Simplex.Standardize
       Linear.Simplex.Types
       Linear.Simplex.Util
-      Linear.SlackForm.Types
-      Linear.SlackForm.Util
       Linear.System.Linear.Types
       Linear.System.Linear.Util
       Linear.System.Simple.Types
@@ -75,9 +75,9 @@ test-suite simplex-method-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Linear.CanonicalForm.UtilSpec
       Linear.Constraint.Simple.UtilSpec
       Linear.Expr.UtilSpec
-      Linear.SlackForm.UtilSpec
       Linear.System.Simple.UtilSpec
       Linear.Term.UtilSpec
       Linear.Var.UtilSpec

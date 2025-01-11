@@ -48,9 +48,8 @@ deriveBounds simpleSystem = foldr updateBounds initialVarBounds simpleSystem.unS
 
 -- Eliminate inequalities which are outside the bounds
 -- precondition: no zero coefficients
--- TODO: better name
-removeUselessSystemBounds :: SimpleSystem -> VarBounds -> SimpleSystem
-removeUselessSystemBounds constraints bounds =
+removeObviousInequalities :: SimpleSystem -> VarBounds -> SimpleSystem
+removeObviousInequalities constraints bounds =
   SimpleSystem $
     filter
       ( \case

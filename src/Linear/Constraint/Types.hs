@@ -7,7 +7,11 @@
 -- Stability:   experimental
 module Linear.Constraint.Types where
 
-import Comparison.Types (MixedComparison)
+import Comparison.Types
+  ( MixedComparison
+  , getLHS
+  , getRHS
+  )
 import qualified Data.Set as Set
 import GHC.Generics (Generic)
 import Linear.Expr.Types (Expr)

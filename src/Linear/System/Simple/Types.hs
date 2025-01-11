@@ -7,7 +7,7 @@
 -- Stability:   experimental
 module Linear.System.Simple.Types where
 
-import Comparison.Types (getMixedComparisonLHS)
+import Comparison.Types (getLHS)
 import qualified Data.Set as Set
 import GHC.Generics (Generic)
 import Linear.Constraint.Simple.Types (SimpleConstraint)

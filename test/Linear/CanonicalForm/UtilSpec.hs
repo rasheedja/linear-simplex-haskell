@@ -1,8 +1,8 @@
-module Linear.SlackForm.UtilSpec where
+module Linear.CanonicalForm.UtilSpec where
 
 import Comparison.Types
   ( MixedComparison ((:<=), (:==), (:>=))
-  , getMixedComparisonLHS
+  , getLHS
   )
 import Control.Monad (forM)
 import Data.Functor ((<&>))
@@ -14,8 +14,8 @@ import qualified Debug.Trace as T
 import Linear.Constraint.Linear.Types (LinearEquation (..))
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))
 import Linear.Expr.Types (Expr (..), ExprVarsOnly (..))
-import Linear.SlackForm.Util
-  ( addSlackVariables
+import Linear.CanonicalForm.Util
+  ( addSlackVars
   , eliminateNonZeroLowerBounds
   , eliminateUnrestrictedLowerBounds
   )
@@ -137,7 +137,7 @@ spec = describe "Slack Form Transformations" $ do
           any
             ( \(SimpleConstraint constraint) ->
                 let getVars _a = []
-                    lhs = getMixedComparisonLHS constraint
+                    lhs = getLHS constraint
                     allVars = getVars lhs
                 in  var `notElem` allVars
             )
@@ -145,7 +145,7 @@ spec = describe "Slack Form Transformations" $ do
       )
       (Map.toList updatedBounds)
   it
-    "addSlackVariables correctly transforms inequalities to equalities (wikipedia case)"
+    "addSlackVars correctly transforms inequalities to equalities (wikipedia case)"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -160,11 +160,11 @@ spec = describe "Slack Form Transformations" $ do
                   2 -- -x_4 + 3x_5 + x_7 = 2
               ]
           expectedSlackVars = [6, 7]
-          (slackVars, updatedSystem) = addSlackVariables simpleSystem
+          (slackVars, updatedSystem) = addSlackVars simpleSystem
       updatedSystem `shouldBe` expectedSystem
       slackVars `shouldBe` expectedSlackVars
   it
-    "addSlackVariables correctly transforms inequalities to equalities (test case 1)"
+    "addSlackVars correctly transforms inequalities to equalities (test case 1)"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -179,11 +179,11 @@ spec = describe "Slack Form Transformations" $ do
                   3 -- -x_3 + 2x_4 - x_6 = 3
               ]
           expectedSlackVars = [5, 6]
-          (slackVars, updatedSystem) = addSlackVariables simpleSystem
+          (slackVars, updatedSystem) = addSlackVars simpleSystem
       updatedSystem `shouldBe` expectedSystem
       slackVars `shouldBe` expectedSlackVars
   it
-    "addSlackVariables correctly transforms inequalities to equalities (test case 2)"
+    "addSlackVars correctly transforms inequalities to equalities (test case 2)"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -198,11 +198,11 @@ spec = describe "Slack Form Transformations" $ do
                   4 -- -x_3 + 2x_4 - x_6 = 4
               ]
           expectedSlackVars = [5, 6]
-          (slackVars, updatedSystem) = addSlackVariables simpleSystem
+          (slackVars, updatedSystem) = addSlackVars simpleSystem
       updatedSystem `shouldBe` expectedSystem
       slackVars `shouldBe` expectedSlackVars
   it
-    "addSlackVariables correctly transforms inequalities to equalities (test case 3)"
+    "addSlackVars correctly transforms inequalities to equalities (test case 3)"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -215,11 +215,11 @@ spec = describe "Slack Form Transformations" $ do
               , LinearEquation (ExprVarsOnly (CoeffTermVO (-1) 3 : [CoeffTermVO 2 4])) 4 -- -x_3 + 2x_4 = 4
               ]
           expectedSlackVars = [5]
-          (slackVars, updatedSystem) = addSlackVariables simpleSystem
+          (slackVars, updatedSystem) = addSlackVars simpleSystem
       updatedSystem `shouldBe` expectedSystem
       slackVars `shouldBe` expectedSlackVars
   it
-    "addSlackVariables correctly transforms inequalities to equalities (test case 4)"
+    "addSlackVars correctly transforms inequalities to equalities (test case 4)"
     $ do
       let simpleSystem =
             SimpleSystem
@@ -232,7 +232,7 @@ spec = describe "Slack Form Transformations" $ do
               , LinearEquation (ExprVarsOnly (CoeffTermVO (-1) 3 : [CoeffTermVO 2 4])) 4 -- -x_3 + 2x_4 = 4
               ]
           expectedSlackVars = []
-          (slackVars, updatedSystem) = addSlackVariables simpleSystem
+          (slackVars, updatedSystem) = addSlackVars simpleSystem
       updatedSystem `shouldBe` expectedSystem
       slackVars `shouldBe` expectedSlackVars
   it
@@ -245,7 +245,7 @@ spec = describe "Slack Form Transformations" $ do
               ]
           systemBounds = deriveBounds simpleSystem
           (eliminatedNonZeroLowerBounds, systemWithoutNonZeroLowerBounds) = eliminateNonZeroLowerBounds simpleSystem Map.empty
-          (slackVars, systemWithSlackVars) = addSlackVariables systemWithoutNonZeroLowerBounds
+          (slackVars, systemWithSlackVars) = addSlackVars systemWithoutNonZeroLowerBounds
           (updatedEliminatedVarsMap, updatedSystem) =
             eliminateUnrestrictedLowerBounds
               systemWithSlackVars
@@ -276,7 +276,7 @@ spec = describe "Slack Form Transformations" $ do
               ]
           systemBounds = deriveBounds simpleSystem
           (eliminatedNonZeroLowerBounds, systemWithoutNonZeroLowerBounds) = eliminateNonZeroLowerBounds simpleSystem Map.empty
-          (slackVars, systemWithSlackVars) = addSlackVariables systemWithoutNonZeroLowerBounds
+          (slackVars, systemWithSlackVars) = addSlackVars systemWithoutNonZeroLowerBounds
           (updatedEliminatedVarsMap, updatedSystem) =
             eliminateUnrestrictedLowerBounds
               systemWithSlackVars
@@ -314,7 +314,7 @@ spec = describe "Slack Form Transformations" $ do
               ]
           systemBounds = deriveBounds simpleSystem
           (eliminatedNonZeroLowerBounds, systemWithoutNonZeroLowerBounds) = eliminateNonZeroLowerBounds simpleSystem Map.empty
-          (slackVars, systemWithSlackVars) = addSlackVariables systemWithoutNonZeroLowerBounds
+          (slackVars, systemWithSlackVars) = addSlackVars systemWithoutNonZeroLowerBounds
           expectedSlackVars = [4, 5, 6]
           (updatedEliminatedVarsMap, updatedSystem) =
             eliminateUnrestrictedLowerBounds
@@ -355,7 +355,7 @@ spec = describe "Slack Form Transformations" $ do
               ]
           systemBounds = deriveBounds simpleSystem
           (eliminatedNonZeroLowerBounds, systemWithoutNonZeroLowerBounds) = eliminateNonZeroLowerBounds simpleSystem Map.empty
-          (slackVars, systemWithSlackVars) = addSlackVariables systemWithoutNonZeroLowerBounds
+          (slackVars, systemWithSlackVars) = addSlackVars systemWithoutNonZeroLowerBounds
           expectedSlackVars = [3, 4]
           (updatedEliminatedVarsMap, updatedSystem) =
             eliminateUnrestrictedLowerBounds
@@ -394,7 +394,7 @@ spec = describe "Slack Form Transformations" $ do
               ]
           systemBounds = deriveBounds simpleSystem
           (eliminatedNonZeroLowerBounds, systemWithoutNonZeroLowerBounds) = eliminateNonZeroLowerBounds simpleSystem Map.empty
-          (slackVars, systemWithSlackVars) = addSlackVariables systemWithoutNonZeroLowerBounds
+          (slackVars, systemWithSlackVars) = addSlackVars systemWithoutNonZeroLowerBounds
           expectedSlackVars = [3, 4]
           (updatedEliminatedVarsMap, updatedSystem) =
             eliminateUnrestrictedLowerBounds

@@ -5,7 +5,12 @@
 -- License     : BSD-3
 -- Maintainer  : jrasheed178@gmail.com
 -- Stability   : experimental
-module Comparison.Types where
+module Comparison.Types
+  ( MixedComparison (..)
+  , getLHS
+  , getRHS
+  )
+where
 
 import Control.Applicative (liftA2)
 import Foreign.C.Types (CBool)
@@ -23,16 +28,22 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (MixedComparison a b) where
       , liftA2 (:==) arbitrary arbitrary
       ]
 
-getMixedComparisonLHS :: MixedComparison a b -> a
-getMixedComparisonLHS (a :<= _) = a
-getMixedComparisonLHS (a :>= _) = a
-getMixedComparisonLHS (a :== _) = a
+getLHS :: MixedComparison a b -> a
+getLHS (a :<= _) = a
+getLHS (a :>= _) = a
+getLHS (a :== _) = a
 
-getMixedComparisonRHS :: MixedComparison a b -> b
-getMixedComparisonRHS (_ :<= b) = b
-getMixedComparisonRHS (_ :>= b) = b
-getMixedComparisonRHS (_ :== b) = b
+getRHS :: MixedComparison a b -> b
+getRHS (_ :<= b) = b
+getRHS (_ :>= b) = b
+getRHS (_ :== b) = b
 
+{- Using a class here and staying 'generic' (as in, be permissive on allowed
+types) is awkward. I think it's simpler to just stick with the data type.
+If we want a class, how do we best define the comparison ops? We'd need a way
+for LhsType and RhsType to be compared. Maybe we can use something like
+MixedTypesNum, but that's going to take some work.
+-}
 class MixedComparison2 c where
   type LhsType c :: *
   type RhsType c :: *

@@ -5,7 +5,7 @@
 -- License: BSD-3
 -- Maintainer: Junaid Rasheed <jrasheed178@gmail.com>
 -- Stability: experimental
-module Linear.SlackForm.Util where
+module Linear.CanonicalForm.Util where
 
 import Comparison.Types
   ( MixedComparison ((:<=), (:==), (:>=))
@@ -13,6 +13,7 @@ import Comparison.Types
 import qualified Data.Bifunctor as Bifunctor
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
+import qualified Data.Set as Set
 import Linear.Constraint.Linear.Types (LinearEquation (..))
 import qualified Linear.Constraint.Linear.Util as CLU
 import Linear.Constraint.Simple.Types (SimpleConstraint (..))
@@ -21,6 +22,7 @@ import Linear.Constraint.Simple.Util
   )
 import Linear.Expr.Types (Expr (..), ExprVarsOnly (..))
 import Linear.Expr.Util (exprVarsOnlyToExpr)
+import Linear.CanonicalForm.Types (CanonicalForm (..))
 import Linear.System.Linear.Types (LinearSystem (..))
 import qualified Linear.System.Linear.Util as SLU
 import Linear.System.Simple.Types
@@ -28,6 +30,7 @@ import Linear.System.Simple.Types
   , simplifySimpleSystem
   )
 import qualified Linear.System.Simple.Types as SST
+import Linear.System.Simple.Util (deriveBounds)
 import Linear.Term.Types
   ( Term (..)
   , TermVarsOnly (..)
@@ -72,8 +75,9 @@ eliminateNonZeroLowerBounds constraints eliminatedVarsMap = aux [] constraints.u
 -- Add slack variables...
 -- Second step here https://en.wikipedia.org/wiki/Simplex_algorithm#Standard_form
 -- Return system of equalities and the slack variables
-addSlackVariables :: SimpleSystem -> ([Var], LinearSystem)
-addSlackVariables constraints =
+-- TODO: [Var] should be a set
+addSlackVars :: SimpleSystem -> ([Var], LinearSystem)
+addSlackVars constraints =
   let nextAvailableVar = SST.nextAvailableVar constraints
   in  aux constraints.unSimpleSystem nextAvailableVar []
   where
@@ -134,3 +138,22 @@ eliminateUnrestrictedLowerBounds constraints varBoundMap eliminatedVarsMap = aux
             (Map.fromList bounds)
             updatedEliminatedVarsMap
     aux cs (_ : bounds) = aux cs bounds
+
+simpleSystemToCanonicalForm :: SimpleSystem -> CanonicalForm
+simpleSystemToCanonicalForm system =
+  CanonicalForm
+    { constraints = finalSystem
+    , originalVars = SST.simpleSystemVars system
+    , systemVars = SLU.linearSystemVars finalSystem
+    , systemSlackVars = Set.fromList slackVars
+    , eliminatedVarsMap = eliminatedVarsMap
+    }
+  where
+    (eliminatedNonZeroLowerBoundVarsMap, system1) = eliminateNonZeroLowerBounds system Map.empty
+    system1Bounds = deriveBounds system1
+    (slackVars, linearSystem) = addSlackVars system1
+    (eliminatedVarsMap, finalSystem) =
+      eliminateUnrestrictedLowerBounds
+        linearSystem
+        system1Bounds
+        eliminatedNonZeroLowerBoundVarsMap
